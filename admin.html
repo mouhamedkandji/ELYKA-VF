@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — ELYKA Gestion Profils</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0B2E6E;
+    --blue: #1A4BAA;
+    --cyan: #00C4F4;
+    --light-cyan: #E8F9FF;
+    --white: #FFFFFF;
+    --gray: #F5F7FA;
+    --text: #1C2B4A;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--gray); color: var(--text); min-height: 100vh; }
+
+  /* HEADER */
+  header {
+    background: var(--navy);
+    padding: 18px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  }
+  .h-logo {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.4rem;
+    color: white; text-decoration: none;
+  }
+  .h-badge {
+    background: rgba(0,196,244,0.2); border: 1px solid rgba(0,196,244,0.4);
+    color: var(--cyan); font-size: 0.72rem; font-weight: 700;
+    padding: 3px 12px; border-radius: 50px; letter-spacing: 0.1em;
+    font-family: 'Syne', sans-serif;
+  }
+  .h-right { display: flex; align-items: center; gap: 12px; }
+  .h-info { font-size: 0.82rem; color: rgba(255,255,255,0.5); }
+
+  /* LAYOUT */
+  .container { display: grid; grid-template-columns: 440px 1fr; gap: 28px; padding: 32px 40px; max-width: 1400px; margin: 0 auto; }
+
+  /* PANEL */
+  .panel {
+    background: white; border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(11,46,110,0.08);
+  }
+  .panel-header {
+    padding: 22px 28px; border-bottom: 1px solid #eef2f8;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .panel-title {
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 1rem; color: var(--navy);
+  }
+  .panel-icon { font-size: 1.1rem; }
+  .panel-body { padding: 24px 28px; }
+
+  /* FORM */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-full { grid-column: 1 / -1; }
+
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-label {
+    font-size: 0.75rem; font-weight: 600; color: var(--navy);
+    text-transform: uppercase; letter-spacing: 0.07em;
+  }
+  .form-input, .form-select {
+    padding: 11px 14px; border: 1.5px solid #e0e8f4; border-radius: 10px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem; color: var(--text);
+    background: #fafcff; transition: all 0.2s; outline: none;
+  }
+  .form-input:focus, .form-select:focus {
+    border-color: var(--cyan); background: var(--light-cyan);
+    box-shadow: 0 0 0 3px rgba(0,196,244,0.12);
+  }
+  .form-input::placeholder { color: #b0bac8; }
+
+  .form-section-title {
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.78rem;
+    text-transform: uppercase; letter-spacing: 0.12em; color: #aab;
+    margin: 18px 0 12px; grid-column: 1 / -1;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .form-section-title::after {
+    content: ''; flex: 1; height: 1px; background: #e8eef6;
+  }
+
+  .btn-generate {
+    width: 100%; padding: 14px; margin-top: 20px;
+    background: var(--navy); color: white; border: none; border-radius: 12px;
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem;
+    cursor: pointer; transition: all 0.3s; display: flex; align-items: center;
+    justify-content: center; gap: 8px;
+  }
+  .btn-generate:hover { background: var(--blue); transform: translateY(-1px); box-shadow: 0 8px 20px rgba(11,46,110,0.2); }
+
+  /* RESULT */
+  .result-panel { display: none; }
+  .result-panel.visible { display: block; }
+
+  .tabs { display: flex; gap: 0; border-bottom: 1px solid #eef2f8; }
+  .tab {
+    padding: 13px 20px; font-family: 'Syne', sans-serif; font-weight: 600;
+    font-size: 0.82rem; cursor: pointer; color: #aab; border-bottom: 2px solid transparent;
+    margin-bottom: -1px; transition: all 0.2s;
+  }
+  .tab.active { color: var(--navy); border-color: var(--cyan); }
+  .tab-content { display: none; padding: 24px 28px; }
+  .tab-content.active { display: block; }
+
+  /* URL BOX */
+  .url-box {
+    background: #f0f7ff; border: 1px solid #d0e4f7; border-radius: 12px;
+    padding: 14px 16px; font-family: monospace; font-size: 0.8rem;
+    color: var(--navy); word-break: break-all; line-height: 1.6;
+    margin-bottom: 14px;
+  }
+  .url-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+  .btn-copy, .btn-test, .btn-qr {
+    padding: 9px 18px; border-radius: 9px; border: none; cursor: pointer;
+    font-family: 'Syne', sans-serif; font-weight: 600; font-size: 0.82rem;
+    transition: all 0.2s; display: flex; align-items: center; gap: 6px;
+  }
+  .btn-copy { background: var(--navy); color: white; }
+  .btn-copy:hover { background: var(--blue); }
+  .btn-test { background: var(--light-cyan); color: var(--blue); border: 1px solid rgba(0,196,244,0.3); }
+  .btn-test:hover { background: #c8f0ff; }
+  .btn-qr { background: #f0f4ff; color: var(--navy); border: 1px solid #d0d8f0; }
+  .btn-qr:hover { background: #e4eaff; }
+
+  /* PROFILE PREVIEW */
+  .preview-wrap {
+    display: flex; justify-content: center;
+  }
+  .phone-shell {
+    width: 280px; background: var(--navy); border-radius: 40px; padding: 12px;
+    box-shadow: 0 30px 60px rgba(11,46,110,0.25);
+  }
+  .phone-screen {
+    background: white; border-radius: 30px; overflow: hidden;
+    padding: 28px 20px;
+  }
+  .pv-header { text-align: center; margin-bottom: 16px; }
+  .pv-avatar {
+    width: 66px; height: 66px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--navy), var(--cyan));
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.4rem;
+    margin: 0 auto 10px;
+  }
+  .pv-name { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.98rem; color: var(--navy); }
+  .pv-poste {
+    display: inline-block; background: var(--light-cyan); color: var(--blue);
+    font-size: 0.7rem; font-weight: 500; padding: 3px 10px; border-radius: 50px;
+    margin-top: 4px;
+  }
+  .pv-divider { width: 32px; height: 2px; background: var(--cyan); margin: 12px auto; }
+  .pv-links { display: flex; flex-direction: column; gap: 7px; }
+  .pv-link {
+    display: flex; align-items: center; gap: 9px;
+    background: #f0f8ff; border-radius: 10px; padding: 8px 11px;
+    font-size: 0.75rem; color: var(--navy); font-weight: 500;
+  }
+  .pv-save {
+    margin-top: 14px; background: var(--navy); color: white; border: none;
+    border-radius: 10px; padding: 11px; width: 100%;
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.8rem;
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+  }
+
+  /* CLIENTS LIST */
+  .clients-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .clients-search {
+    padding: 9px 14px; border: 1.5px solid #e0e8f4; border-radius: 9px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+    outline: none; width: 200px; transition: all 0.2s;
+  }
+  .clients-search:focus { border-color: var(--cyan); }
+  .clients-count { font-size: 0.82rem; color: #889; }
+
+  .clients-table { width: 100%; border-collapse: collapse; }
+  .clients-table th {
+    text-align: left; padding: 10px 14px;
+    font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em;
+    color: #aab; font-weight: 600; background: #f8fafd;
+    border-bottom: 1px solid #eef2f8;
+  }
+  .clients-table td { padding: 13px 14px; border-bottom: 1px solid #f0f4f8; font-size: 0.88rem; }
+  .clients-table tr:hover td { background: #fafcff; }
+  .client-name-cell { font-weight: 600; color: var(--navy); }
+  .client-poste-cell { color: #667; font-size: 0.82rem; }
+  .badge-active {
+    display: inline-block; padding: 3px 10px; border-radius: 50px; font-size: 0.72rem; font-weight: 600;
+    background: #d1fae5; color: #065f46; font-family: 'Syne', sans-serif;
+  }
+  .action-btns { display: flex; gap: 6px; }
+  .btn-icon {
+    padding: 6px 10px; border-radius: 7px; border: none; cursor: pointer;
+    font-size: 0.82rem; transition: all 0.2s;
+  }
+  .btn-view { background: var(--light-cyan); color: var(--blue); }
+  .btn-view:hover { background: #c5eeff; }
+  .btn-del { background: #fef2f2; color: #dc2626; }
+  .btn-del:hover { background: #fee2e2; }
+
+  .empty-state {
+    text-align: center; padding: 48px 20px; color: #bbc;
+  }
+  .empty-icon { font-size: 2.5rem; margin-bottom: 12px; }
+  .empty-text { font-size: 0.9rem; }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 30px; right: 30px; z-index: 999;
+    background: var(--navy); color: white; padding: 12px 20px; border-radius: 12px;
+    font-family: 'Syne', sans-serif; font-weight: 600; font-size: 0.88rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 8px;
+    transform: translateY(80px); opacity: 0; transition: all 0.3s;
+    pointer-events: none;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* NFC HINT */
+  .nfc-hint {
+    background: linear-gradient(135deg, #f0f7ff, #e8f9ff);
+    border: 1px solid rgba(0,196,244,0.3); border-radius: 12px;
+    padding: 14px 16px; margin-bottom: 16px;
+    display: flex; gap: 12px; align-items: flex-start;
+  }
+  .nfc-hint-icon { font-size: 1.3rem; flex-shrink: 0; }
+  .nfc-hint-text { font-size: 0.82rem; color: #556; line-height: 1.5; }
+  .nfc-hint-text strong { color: var(--navy); }
+
+  @media (max-width: 900px) {
+    .container { grid-template-columns: 1fr; padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="#" class="h-logo">
+    <svg width="32" height="22" viewBox="0 0 40 30" fill="none">
+      <path d="M4 24L12 8L20 20L25 12L33 24H4Z" fill="white" opacity="0.9"/>
+      <path d="M11 24L18 14L25 24H11Z" fill="#00C4F4"/>
+    </svg>
+    ELYKA
+  </a>
+  <div class="h-badge">ADMIN</div>
+  <div class="h-right">
+    <span class="h-info">Gestion des profils NFC</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- FORMULAIRE CRÉATION PROFIL -->
+  <div>
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-icon">➕</span>
+        <span class="panel-title">Créer un profil client</span>
+      </div>
+      <div class="panel-body">
+        <div class="form-grid">
+          <!-- Infos de base -->
+          <div class="form-section-title form-full">Informations personnelles</div>
+
+          <div class="form-group">
+            <label class="form-label">Prénom *</label>
+            <input type="text" class="form-input" id="inp-prenom" placeholder="ex: Moussa">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nom *</label>
+            <input type="text" class="form-input" id="inp-nom" placeholder="ex: Diallo">
+          </div>
+          <div class="form-group form-full">
+            <label class="form-label">Poste / Titre *</label>
+            <input type="text" class="form-input" id="inp-poste" placeholder="ex: Directeur Commercial">
+          </div>
+          <div class="form-group form-full">
+            <label class="form-label">Entreprise</label>
+            <input type="text" class="form-input" id="inp-company" placeholder="ex: TechSenegal SARL">
+          </div>
+
+          <!-- Contact -->
+          <div class="form-section-title form-full">Coordonnées</div>
+
+          <div class="form-group form-full">
+            <label class="form-label">Numéro de téléphone *</label>
+            <input type="tel" class="form-input" id="inp-tel" placeholder="+221 77 000 00 00">
+          </div>
+          <div class="form-group form-full">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-input" id="inp-email" placeholder="moussa@example.com">
+          </div>
+          <div class="form-group form-full">
+            <label class="form-label">Site web</label>
+            <input type="text" class="form-input" id="inp-site" placeholder="www.example.com">
+          </div>
+
+          <!-- Réseaux -->
+          <div class="form-section-title form-full">Réseaux sociaux</div>
+
+          <div class="form-group">
+            <label class="form-label">🔗 LinkedIn</label>
+            <input type="text" class="form-input" id="inp-linkedin" placeholder="linkedin.com/in/...">
+          </div>
+          <div class="form-group">
+            <label class="form-label">📸 Instagram</label>
+            <input type="text" class="form-input" id="inp-instagram" placeholder="@pseudo">
+          </div>
+          <div class="form-group">
+            <label class="form-label">👥 Facebook</label>
+            <input type="text" class="form-input" id="inp-facebook" placeholder="facebook.com/...">
+          </div>
+          <div class="form-group">
+            <label class="form-label">💬 WhatsApp</label>
+            <input type="text" class="form-input" id="inp-whatsapp" placeholder="+221 77 ...">
+          </div>
+          <div class="form-group">
+            <label class="form-label">✖️ Twitter / X</label>
+            <input type="text" class="form-input" id="inp-twitter" placeholder="@pseudo">
+          </div>
+        </div>
+
+        <button class="btn-generate" onclick="generateProfile()">
+          ✨ Générer le lien NFC
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RÉSULTAT + CLIENTS -->
+  <div style="display:flex; flex-direction:column; gap:24px;">
+
+    <!-- Résultat du profil généré -->
+    <div class="panel result-panel" id="resultPanel">
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab('link')">🔗 Lien & NFC</div>
+        <div class="tab" onclick="switchTab('preview')">👁️ Aperçu</div>
+      </div>
+
+      <div class="tab-content active" id="tab-link">
+        <div class="nfc-hint">
+          <span class="nfc-hint-icon">📡</span>
+          <div class="nfc-hint-text">
+            <strong>Comment programmer la carte NFC :</strong> Copiez le lien ci-dessous, puis utilisez une app NFC (NFC Tools, NFC TagWriter) pour écrire ce lien dans la puce de la carte. Quand le client tap sa carte, ce lien s'ouvrira automatiquement.
+          </div>
+        </div>
+
+        <div class="url-box" id="generatedUrl"></div>
+        <div class="url-actions">
+          <button class="btn-copy" onclick="copyUrl()">📋 Copier le lien</button>
+          <button class="btn-test" onclick="testUrl()">🔍 Tester le profil</button>
+          <button class="btn-qr" onclick="generateQR()">📱 QR Code</button>
+        </div>
+
+        <div id="qrContainer" style="display:none; text-align:center; margin-top:16px;">
+          <img id="qrImage" style="width:180px; border-radius:12px; border:1px solid #eef2f8;" alt="QR Code">
+          <p style="font-size:0.75rem; color:#889; margin-top:8px;">Scannez avec l'appareil photo</p>
+        </div>
+      </div>
+
+      <div class="tab-content" id="tab-preview">
+        <div class="preview-wrap">
+          <div class="phone-shell">
+            <div class="phone-screen">
+              <div class="pv-header">
+                <div class="pv-avatar" id="pv-avatar">JD</div>
+                <div class="pv-name" id="pv-name">Jean Dupont</div>
+                <div class="pv-poste" id="pv-poste">Directeur</div>
+              </div>
+              <div class="pv-divider"></div>
+              <div class="pv-links" id="pv-links"></div>
+              <button class="pv-save">💾 Enregistrer le contact</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Liste clients -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-icon">👥</span>
+        <span class="panel-title">Clients enregistrés</span>
+      </div>
+      <div class="panel-body" style="padding-top:16px;">
+        <div class="clients-header">
+          <span class="clients-count" id="clientsCount">0 profil(s)</span>
+          <input type="text" class="clients-search" placeholder="🔍 Rechercher..." oninput="filterClients(this.value)">
+        </div>
+        <div id="clientsList">
+          <div class="empty-state">
+            <div class="empty-icon">📋</div>
+            <div class="empty-text">Aucun profil créé pour l'instant.<br>Remplissez le formulaire et générez un lien.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast">✅ Copié !</div>
+
+<script>
+  // BASE URL de votre site profil — à modifier selon votre hébergement
+  const BASE_PROFILE_URL = window.location.origin + window.location.pathname.replace('admin.html','') + 'profil.html';
+
+  let clients = JSON.parse(localStorage.getItem('elyka_clients') || '[]');
+  let currentUrl = '';
+
+  function generateProfile() {
+    const prenom = document.getElementById('inp-prenom').value.trim();
+    const nom = document.getElementById('inp-nom').value.trim();
+    const poste = document.getElementById('inp-poste').value.trim();
+
+    if (!prenom || !nom || !poste) {
+      alert('⚠️ Veuillez remplir au minimum : Prénom, Nom et Poste.');
+      return;
+    }
+
+    const fullName = prenom + ' ' + nom;
+    const params = new URLSearchParams();
+
+    params.set('nom', fullName);
+    if (poste) params.set('poste', poste);
+    const company = document.getElementById('inp-company').value.trim();
+    if (company) params.set('company', company);
+    const tel = document.getElementById('inp-tel').value.trim();
+    if (tel) params.set('tel', tel);
+    const email = document.getElementById('inp-email').value.trim();
+    if (email) params.set('email', email);
+    const site = document.getElementById('inp-site').value.trim();
+    if (site) params.set('site', site);
+    const linkedin = document.getElementById('inp-linkedin').value.trim();
+    if (linkedin) params.set('linkedin', linkedin);
+    const instagram = document.getElementById('inp-instagram').value.trim();
+    if (instagram) params.set('instagram', instagram);
+    const facebook = document.getElementById('inp-facebook').value.trim();
+    if (facebook) params.set('facebook', facebook);
+    const whatsapp = document.getElementById('inp-whatsapp').value.trim();
+    if (whatsapp) params.set('whatsapp', whatsapp);
+    const twitter = document.getElementById('inp-twitter').value.trim();
+    if (twitter) params.set('twitter', twitter);
+
+    currentUrl = BASE_PROFILE_URL + '?' + params.toString();
+    document.getElementById('generatedUrl').textContent = currentUrl;
+    document.getElementById('qrContainer').style.display = 'none';
+
+    // Update preview
+    const initials = (prenom[0] + nom[0]).toUpperCase();
+    document.getElementById('pv-avatar').textContent = initials;
+    document.getElementById('pv-name').textContent = fullName;
+    document.getElementById('pv-poste').textContent = poste;
+    const pvLinks = document.getElementById('pv-links');
+    pvLinks.innerHTML = '';
+    if (tel) pvLinks.innerHTML += `<div class="pv-link">📞 ${tel}</div>`;
+    if (site) pvLinks.innerHTML += `<div class="pv-link">🌐 ${site.replace(/^https?:\/\//,'')}</div>`;
+    if (linkedin) pvLinks.innerHTML += `<div class="pv-link">🔗 LinkedIn</div>`;
+    if (instagram) pvLinks.innerHTML += `<div class="pv-link">📸 Instagram</div>`;
+
+    // Show panel
+    document.getElementById('resultPanel').classList.add('visible');
+
+    // Save client
+    const id = Date.now();
+    const clientData = { id, nom: fullName, poste, company, tel, email, site, linkedin, instagram, facebook, whatsapp, twitter, url: currentUrl, date: new Date().toLocaleDateString('fr-FR') };
+    clients.unshift(clientData);
+    localStorage.setItem('elyka_clients', JSON.stringify(clients));
+    renderClients(clients);
+
+    showToast('✅ Profil créé !');
+  }
+
+  function switchTab(tab) {
+    document.querySelectorAll('.tab').forEach((t,i) => {
+      t.classList.toggle('active', (i === 0 && tab === 'link') || (i === 1 && tab === 'preview'));
+    });
+    document.querySelectorAll('.tab-content').forEach((c,i) => {
+      c.classList.toggle('active', (i === 0 && tab === 'link') || (i === 1 && tab === 'preview'));
+    });
+  }
+
+  function copyUrl() {
+    if (!currentUrl) return;
+    navigator.clipboard.writeText(currentUrl).then(() => showToast('📋 Lien copié !'));
+  }
+
+  function testUrl() {
+    if (currentUrl) window.open(currentUrl, '_blank');
+  }
+
+  function generateQR() {
+    if (!currentUrl) return;
+    const encoded = encodeURIComponent(currentUrl);
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encoded}`;
+    document.getElementById('qrImage').src = qrUrl;
+    document.getElementById('qrContainer').style.display = 'block';
+  }
+
+  function renderClients(list) {
+    const container = document.getElementById('clientsList');
+    document.getElementById('clientsCount').textContent = list.length + ' profil(s)';
+    if (list.length === 0) {
+      container.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">Aucun profil trouvé.</div></div>`;
+      return;
+    }
+    container.innerHTML = `
+      <table class="clients-table">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Téléphone</th>
+            <th>Date</th>
+            <th>Statut</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${list.map(c => `
+            <tr>
+              <td>
+                <div class="client-name-cell">${c.nom}</div>
+                <div class="client-poste-cell">${c.poste}${c.company ? ' · ' + c.company : ''}</div>
+              </td>
+              <td style="color:#556">${c.tel || '—'}</td>
+              <td style="color:#889; font-size:0.8rem">${c.date}</td>
+              <td><span class="badge-active">Actif</span></td>
+              <td>
+                <div class="action-btns">
+                  <button class="btn-icon btn-view" onclick="viewClient(${c.id})" title="Voir le profil">👁️</button>
+                  <button class="btn-icon btn-del" onclick="deleteClient(${c.id})" title="Supprimer">🗑️</button>
+                </div>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>`;
+  }
+
+  function viewClient(id) {
+    const c = clients.find(x => x.id === id);
+    if (c && c.url) window.open(c.url, '_blank');
+  }
+
+  function deleteClient(id) {
+    if (!confirm('Supprimer ce profil ?')) return;
+    clients = clients.filter(c => c.id !== id);
+    localStorage.setItem('elyka_clients', JSON.stringify(clients));
+    renderClients(clients);
+    showToast('🗑️ Profil supprimé');
+  }
+
+  function filterClients(query) {
+    const q = query.toLowerCase();
+    const filtered = clients.filter(c =>
+      c.nom.toLowerCase().includes(q) ||
+      (c.poste && c.poste.toLowerCase().includes(q)) ||
+      (c.company && c.company.toLowerCase().includes(q)) ||
+      (c.tel && c.tel.includes(q))
+    );
+    renderClients(filtered);
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  // Init
+  renderClients(clients);
+</script>
+</body>
+</html>

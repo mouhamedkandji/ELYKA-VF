@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profil — ELYKA</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0B2E6E;
+    --blue: #1A4BAA;
+    --cyan: #00C4F4;
+    --light-cyan: #E8F9FF;
+    --white: #FFFFFF;
+    --text: #1C2B4A;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: linear-gradient(160deg, var(--navy) 0%, #1A4BAA 50%, #0d3070 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: -30%;
+    right: -20%;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,196,244,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -20%;
+    left: -10%;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(0,196,244,0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .card {
+    background: white;
+    border-radius: 32px;
+    width: 100%;
+    max-width: 420px;
+    padding: 40px 32px 32px;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.4);
+    position: relative;
+    animation: slideUp 0.6s cubic-bezier(0.22,1,0.36,1) both;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(40px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .elyka-badge {
+    position: absolute;
+    top: 20px; right: 24px;
+    display: flex; align-items: center; gap: 5px;
+    font-family: 'Syne', sans-serif; font-size: 0.72rem; font-weight: 700;
+    color: var(--cyan); letter-spacing: 0.08em;
+    background: rgba(0,196,244,0.08);
+    padding: 5px 12px; border-radius: 50px;
+    border: 1px solid rgba(0,196,244,0.25);
+  }
+  .elyka-badge::before { content: ''; width: 6px; height: 6px; background: var(--cyan); border-radius: 50%; }
+
+  .profile-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid #eef2f8;
+    margin-bottom: 28px;
+    text-align: center;
+  }
+
+  .avatar {
+    width: 88px; height: 88px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--navy), var(--cyan));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 2rem; color: white;
+    box-shadow: 0 8px 24px rgba(11,46,110,0.25);
+    border: 4px solid white;
+    position: relative;
+    margin-bottom: 4px;
+  }
+  .avatar::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 2px solid rgba(0,196,244,0.3);
+  }
+
+  .profile-name {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 1.5rem; color: var(--navy);
+    line-height: 1.1;
+  }
+  .profile-poste {
+    font-size: 0.85rem; color: var(--blue);
+    font-weight: 500; letter-spacing: 0.04em;
+    background: var(--light-cyan);
+    padding: 4px 14px; border-radius: 50px;
+  }
+  .profile-company {
+    font-size: 0.82rem; color: #889;
+    font-weight: 400;
+  }
+
+  .info-section {
+    display: flex; flex-direction: column; gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .info-item {
+    display: flex; align-items: center; gap: 14px;
+    padding: 13px 16px;
+    border-radius: 14px;
+    background: #f8fafd;
+    border: 1px solid #eef2f8;
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .info-item:hover {
+    background: var(--light-cyan);
+    border-color: rgba(0,196,244,0.35);
+    transform: translateX(3px);
+  }
+  .info-icon {
+    width: 38px; height: 38px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; flex-shrink: 0;
+    background: white;
+    box-shadow: 0 2px 8px rgba(11,46,110,0.1);
+  }
+  .info-label {
+    font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em;
+    color: #aab; font-weight: 600; margin-bottom: 1px;
+  }
+  .info-value {
+    font-size: 0.9rem; color: var(--navy); font-weight: 500;
+  }
+
+  .social-title {
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em;
+    color: #aab; margin-bottom: 12px;
+  }
+
+  .social-grid {
+    display: flex; gap: 10px; flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+
+  .social-btn {
+    display: flex; align-items: center; gap: 8px;
+    padding: 9px 16px; border-radius: 12px;
+    border: 1px solid #e8eef6;
+    background: #f8fafd;
+    font-size: 0.82rem; color: var(--navy); font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .social-btn:hover {
+    background: var(--light-cyan);
+    border-color: rgba(0,196,244,0.4);
+  }
+  .social-icon { font-size: 1rem; }
+
+  .save-btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--navy);
+    color: white;
+    border: none; border-radius: 16px;
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .save-btn::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--blue), var(--cyan));
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .save-btn:hover::before { opacity: 1; }
+  .save-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(11,46,110,0.3); }
+  .save-btn span { position: relative; z-index: 1; }
+  .save-btn-icon { position: relative; z-index: 1; font-size: 1.2rem; }
+
+  .footer-elyka {
+    text-align: center; margin-top: 20px;
+    font-size: 0.75rem; color: rgba(255,255,255,0.45);
+  }
+  .footer-elyka strong { color: rgba(255,255,255,0.7); font-family: 'Syne', sans-serif; }
+  .footer-elyka a { color: var(--cyan); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div class="card" id="profileCard">
+  <div class="elyka-badge">ELYKA NFC</div>
+
+  <div class="profile-header">
+    <div class="avatar" id="avatarEl">JD</div>
+    <div class="profile-name" id="nameEl">Jean Dupont</div>
+    <div class="profile-poste" id="posteEl">Directeur Commercial</div>
+    <div class="profile-company" id="companyEl">TechSenegal SARL</div>
+  </div>
+
+  <div class="info-section" id="infoSection">
+    <a class="info-item" id="phoneItem" href="tel:+221770000000">
+      <div class="info-icon">📞</div>
+      <div>
+        <div class="info-label">Téléphone</div>
+        <div class="info-value" id="phoneEl">+221 77 000 00 00</div>
+      </div>
+    </a>
+    <a class="info-item" id="websiteItem" href="https://example.com" target="_blank">
+      <div class="info-icon">🌐</div>
+      <div>
+        <div class="info-label">Site web</div>
+        <div class="info-value" id="websiteEl">www.example.com</div>
+      </div>
+    </a>
+  </div>
+
+  <div id="socialSection">
+    <div class="social-title">Réseaux sociaux</div>
+    <div class="social-grid" id="socialGrid">
+      <!-- dynamically populated -->
+    </div>
+  </div>
+
+  <button class="save-btn" onclick="saveContact()">
+    <span class="save-btn-icon">💾</span>
+    <span>Enregistrer le contact</span>
+  </button>
+</div>
+
+<div class="footer-elyka">
+  Carte de visite connectée par <strong><a href="http://www.elyka.com" target="_blank">ELYKA</a></strong>
+</div>
+
+<script>
+  // ═══════════════════════════════════════════════════════════════
+  // DONNÉES DU PROFIL — Ces données viennent de l'URL (paramètres)
+  // Ex: profil.html?nom=Jean+Dupont&poste=Directeur&tel=+221770000000&site=www.example.com&linkedin=linkedin.com/in/jean
+  // ═══════════════════════════════════════════════════════════════
+
+  const params = new URLSearchParams(window.location.search);
+
+  const data = {
+    nom:       params.get('nom')       || 'Jean Dupont',
+    poste:     params.get('poste')     || 'Directeur Commercial',
+    company:   params.get('company')   || '',
+    tel:       params.get('tel')       || '+221 77 000 00 00',
+    site:      params.get('site')      || '',
+    linkedin:  params.get('linkedin')  || '',
+    instagram: params.get('instagram') || '',
+    facebook:  params.get('facebook')  || '',
+    twitter:   params.get('twitter')   || '',
+    whatsapp:  params.get('whatsapp')  || '',
+    email:     params.get('email')     || '',
+  };
+
+  // Remplir l'interface
+  const initials = data.nom.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+  document.getElementById('avatarEl').textContent = initials;
+  document.getElementById('nameEl').textContent = data.nom;
+  document.getElementById('posteEl').textContent = data.poste || '';
+  document.getElementById('companyEl').textContent = data.company || '';
+  if (!data.company) document.getElementById('companyEl').style.display = 'none';
+
+  document.title = data.nom + ' — ELYKA';
+
+  // Téléphone
+  if (data.tel) {
+    document.getElementById('phoneEl').textContent = data.tel;
+    document.getElementById('phoneItem').href = 'tel:' + data.tel.replace(/\s/g,'');
+  } else {
+    document.getElementById('phoneItem').style.display = 'none';
+  }
+
+  // Site web
+  if (data.site) {
+    const siteUrl = data.site.startsWith('http') ? data.site : 'https://' + data.site;
+    document.getElementById('websiteEl').textContent = data.site.replace(/^https?:\/\//, '');
+    document.getElementById('websiteItem').href = siteUrl;
+  } else {
+    document.getElementById('websiteItem').style.display = 'none';
+  }
+
+  // Email
+  if (data.email) {
+    const emailEl = document.createElement('a');
+    emailEl.className = 'info-item';
+    emailEl.href = 'mailto:' + data.email;
+    emailEl.innerHTML = `<div class="info-icon">✉️</div><div><div class="info-label">Email</div><div class="info-value">${data.email}</div></div>`;
+    document.getElementById('infoSection').appendChild(emailEl);
+  }
+
+  // Réseaux sociaux
+  const socials = [
+    { key: 'linkedin',  label: 'LinkedIn',   icon: '🔗', base: 'https://linkedin.com/in/' },
+    { key: 'instagram', label: 'Instagram',  icon: '📸', base: 'https://instagram.com/' },
+    { key: 'facebook',  label: 'Facebook',   icon: '👥', base: 'https://facebook.com/' },
+    { key: 'twitter',   label: 'Twitter/X',  icon: '✖️', base: 'https://twitter.com/' },
+    { key: 'whatsapp',  label: 'WhatsApp',   icon: '💬', base: 'https://wa.me/' },
+  ];
+
+  const grid = document.getElementById('socialGrid');
+  let hasSocials = false;
+  socials.forEach(s => {
+    if (data[s.key]) {
+      hasSocials = true;
+      const url = data[s.key].startsWith('http') ? data[s.key] : s.base + data[s.key].replace('@','');
+      const btn = document.createElement('a');
+      btn.className = 'social-btn';
+      btn.href = url;
+      btn.target = '_blank';
+      btn.innerHTML = `<span class="social-icon">${s.icon}</span><span>${s.label}</span>`;
+      grid.appendChild(btn);
+    }
+  });
+  if (!hasSocials) {
+    document.getElementById('socialSection').style.display = 'none';
+  }
+
+  // ═══════════════════════════════════════════
+  // BOUTON ENREGISTRER LE CONTACT (vCard)
+  // ═══════════════════════════════════════════
+  function saveContact() {
+    const prenom = data.nom.split(' ')[0] || '';
+    const famille = data.nom.split(' ').slice(1).join(' ') || '';
+    const tel = data.tel.replace(/[\s\-\(\)]/g, '');
+    const siteUrl = data.site ? (data.site.startsWith('http') ? data.site : 'https://' + data.site) : '';
+
+    let vcard = `BEGIN:VCARD
+VERSION:3.0
+FN:${data.nom}
+N:${famille};${prenom};;;
+ORG:${data.company || ''}
+TITLE:${data.poste || ''}
+TEL;TYPE=CELL:${tel}
+${data.email ? 'EMAIL:' + data.email : ''}
+${siteUrl ? 'URL:' + siteUrl : ''}
+${data.linkedin ? 'X-SOCIALPROFILE;TYPE=linkedin:' + data.linkedin : ''}
+NOTE:Carte de visite connectée ELYKA
+END:VCARD`;
+
+    const blob = new Blob([vcard], { type: 'text/vcard;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = data.nom.replace(/\s+/g, '_') + '.vcf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    // Feedback visuel
+    const btn = document.querySelector('.save-btn span:last-child');
+    btn.textContent = '✅ Contact enregistré !';
+    setTimeout(() => btn.textContent = 'Enregistrer le contact', 2500);
+  }
+</script>
+</body>
+</html>
